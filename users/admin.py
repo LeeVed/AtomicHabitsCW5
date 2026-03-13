@@ -9,11 +9,29 @@ from .models import CustomUser
 class CustomUserAdmin(UserAdmin):
     fieldsets = (
         (None, {"fields": ("email", "password")}),
-        (_("Персональная информация"), {"fields": ("first_name", "last_name", "phone_number", "country", "avatar")}),
+        (
+            _("Персональная информация"),
+            {
+                "fields": (
+                    "first_name",
+                    "last_name",
+                    "phone_number",
+                    "country",
+                    "avatar",
+                    "telegram_chat_id",
+                )
+            },
+        ),
         (
             _("Права и разрешения"),
             {
-                "fields": ("is_active", "is_staff", "is_superuser", "groups", "user_permissions"),
+                "fields": (
+                    "is_active",
+                    "is_staff",
+                    "is_superuser",
+                    "groups",
+                    "user_permissions",
+                ),
             },
         ),
         (_("Важные даты"), {"fields": ("last_login", "date_joined")}),
@@ -29,7 +47,15 @@ class CustomUserAdmin(UserAdmin):
         ),
     )
 
-    list_display = ("email", "first_name", "last_name", "phone_number", "country", "is_staff")
+    list_display = (
+        "email",
+        "first_name",
+        "last_name",
+        "phone_number",
+        "country",
+        "telegram_chat_id",
+        "is_staff",
+    )
     list_filter = ("is_staff", "is_superuser", "is_active", "country")
     search_fields = ("email", "first_name", "last_name", "phone_number", "country")
     ordering = ("email",)
