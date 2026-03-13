@@ -1,5 +1,4 @@
-from django.contrib.auth.models import AbstractUser
-from django.contrib.auth.models import BaseUserManager
+from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
 
 
@@ -24,9 +23,22 @@ class CustomUserManager(BaseUserManager):
 class CustomUser(AbstractUser):
     username = None
     email = models.EmailField(verbose_name="почта", unique=True)
-    phone_number = models.CharField(verbose_name="номер телефона", max_length=15, blank=True, null=True)
-    country = models.CharField(verbose_name="страна", max_length=50, blank=True, null=True)
-    avatar = models.ImageField(verbose_name="аватар", upload_to="users/avatars/", blank=True, null=True)
+    phone_number = models.CharField(
+        verbose_name="номер телефона", max_length=15, blank=True, null=True
+    )
+    country = models.CharField(
+        verbose_name="страна", max_length=50, blank=True, null=True
+    )
+    avatar = models.ImageField(
+        verbose_name="аватар", upload_to="users/avatars/", blank=True, null=True
+    )
+    telegram_chat_id = models.CharField(
+        max_length=100,
+        verbose_name="Telegram chat ID",
+        blank=True,
+        null=True,
+        help_text="ID чата в Telegram для уведомлений",
+    )
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
