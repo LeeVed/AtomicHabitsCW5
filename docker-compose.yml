@@ -8,8 +8,8 @@ services:
       - .env
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: ${PASSWORD}
-      POSTGRES_DB: ${NAME}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_NAME}
       POSTGRES_HOST_AUTH_METHOD: trust
     ports:
       - "5432:5432"
