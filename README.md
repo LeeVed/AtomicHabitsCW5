@@ -34,6 +34,12 @@ API-сервис для трекинга полезных привычек по 
 
 ## Установка и запуск
 
+### Требования
+- Python 3.13
+- Poetry
+- PostgreSQL
+- Redis (для Celery)
+
 ### 1. Клонирование репозитория
 
     git clone https://github.com/yourusername/atomic-habits.git
@@ -105,6 +111,69 @@ API-сервис для трекинга полезных привычек по 
 ## Тестирование
 
     poetry run python manage.py test
+
+## CI/CD Pipeline
+
+Проект настроен для автоматического тестирования и деплоя через GitHub Actions.
+
+### Автоматические проверки (CI)
+
+При каждом push и pull request запускаются:
+- **Линтинг** — проверка кода через Flake8
+- **Тесты** — запуск всех тестов с PostgreSQL и Redis в контейнерах
+- **Сборка Docker-образа** — проверка, что образ собирается успешно
+
+### Непрерывный деплой (CD)
+
+При пуше в ветку `main` или `master` автоматически:
+1. Запускаются все проверки CI
+2. Собирается Docker-образ
+3. Образ пушится в Docker Hub
+4. Проект автоматически деплоится на сервер через SSH
+
+### Необходимые секреты GitHub
+
+Для работы CI/CD нужно добавить в настройках репозитория (`Settings → Secrets and variables → Actions`):
+
+| Секрет | Описание |
+|--------|----------|
+| `DOCKER_HUB_USERNAME` | Имя пользователя Docker Hub |
+| `DOCKER_HUB_ACCESS_TOKEN` | Токен доступа к Docker Hub |
+| `SSH_KEY` | Приватный SSH-ключ для доступа к серверу |
+| `SSH_USER` | Имя пользователя на сервере (например, `ubuntu`) |
+| `SERVER_IP` | IP-адрес сервера |
+
+## 🐳 Деплой на сервер
+
+### Подготовка сервера
+
+1. Подключитесь к серверу:
+```bash
+   ssh ubuntu@IP-адрес-сервера
+     
+2. Установите Docker и Docker Compose:
+```bash
+   sudo apt update && sudo apt upgrade -y
+   sudo apt install docker.io docker-compose -y
+     
+3. Клонируйте репозиторий:
+```bash
+   sudo git clone https://github.com/LeeVed/AtomicHabitsCW5.git /opt/habits
+   sudo chown -R ubuntu:ubuntu /opt/habits
+   cd /opt/habits
+   
+4. Настройте переменные окружения:
+```bash
+   cp .env.sample .env
+   nano .env  # заполните реальными данными
+   
+5. Запустите проект:
+```bash
+   docker compose up -d --build
+   docker compose exec web python manage.py migrate
+   docker compose exec web python manage.py collectstatic --noinput
+   docker compose exec web python manage.py createsuperuser
+
 
 ### Запуск с покрытием
 
